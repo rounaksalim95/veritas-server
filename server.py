@@ -1,0 +1,62 @@
+# from solc import compile_files
+
+# contracts = compile_files(["../contracts/veritas.sol"])
+
+# contract_id, contract_interface = contracts.popitem()
+
+# bytecode = contract_interface["bin"]
+
+# abi = contract_interface["abi"]
+
+import json
+from flask import Flask, request, jsonify
+from web3 import Web3
+
+app = Flask(__name__)
+
+# DB
+users = {}
+companies = {}
+
+# Flask routes
+@app.route("/signup/customer", methods=["POST"])
+def sign_up_customer():
+    request_data = request.json
+    username = request_data["username"]
+    password = request_data["password"]
+    users[username] = password
+    return jsonify({"message": "Customer created successfully"})
+
+
+@app.route("/signin/customer", methods=["POST"])
+def sign_in_customer():
+    """
+    POST endpoint to sign in a user
+    """
+    request_data = request.json
+    if request_data["username"] in users and users[request_data["username"]] == request_data["password"]:
+        return jsonify({"message": "Customer successfully authenticated"})
+    else:
+        return jsonify({"message": "Invalid username or password"}), 401
+
+
+@app.route("/signup/company", methods=["POST"])
+def sign_up_company():
+    request_data = request.json
+    username = request_data["username"]
+    password = request_data["password"]
+    companies[username] = password
+    return jsonify({"message": "Company created successfully"})
+
+
+@app.route("/signin/company", methods=["POST"])
+def sign_in_company():
+    request_data = request.json
+    if request_data["username"] in companies and companies[request_data["username"]] == request_data["password"]:
+        return jsonify({"message": "Company successfully authenticated"})
+    else:
+        return jsonify({"message": "Invalid username or password"}), 401
+
+
+if __name__ == "__main__":
+    app.run(debug=True)
