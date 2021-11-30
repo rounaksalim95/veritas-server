@@ -9,7 +9,8 @@
 # abi = contract_interface["abi"]
 
 import json
-from flask import Flask, request, jsonify
+
+from flask import Flask, jsonify, request
 from web3 import Web3
 
 app = Flask(__name__)
@@ -17,6 +18,8 @@ app = Flask(__name__)
 # DB
 users = {}
 companies = {}
+company_name_map = {}
+
 
 # Flask routes
 @app.route("/signup/customer", methods=["POST"])
@@ -30,11 +33,11 @@ def sign_up_customer():
 
 @app.route("/signin/customer", methods=["POST"])
 def sign_in_customer():
-    """
-    POST endpoint to sign in a user
-    """
     request_data = request.json
-    if request_data["username"] in users and users[request_data["username"]] == request_data["password"]:
+    if (
+        request_data["username"] in users
+        and users[request_data["username"]] == request_data["password"]
+    ):
         return jsonify({"message": "Customer successfully authenticated"})
     else:
         return jsonify({"message": "Invalid username or password"}), 401
@@ -46,16 +49,52 @@ def sign_up_company():
     username = request_data["username"]
     password = request_data["password"]
     companies[username] = password
+    company_name_map[username] = request_data["company_name"]
     return jsonify({"message": "Company created successfully"})
 
 
 @app.route("/signin/company", methods=["POST"])
 def sign_in_company():
     request_data = request.json
-    if request_data["username"] in companies and companies[request_data["username"]] == request_data["password"]:
+    if (
+        request_data["username"] in companies
+        and companies[request_data["username"]] == request_data["password"]
+    ):
         return jsonify({"message": "Company successfully authenticated"})
     else:
         return jsonify({"message": "Invalid username or password"}), 401
+
+
+@app.route("/company/<username>", methods=["GET"])
+def get_company_information(username):
+    if username == "" or username is None:
+        return jsonify({"message": "Invalid username"}), 400
+
+    if username in companies:
+        company_name = company_name_map[username]
+        # return hardcoded products for now
+        return jsonify(
+            {
+                "message": "Company found",
+                "company_name": company_name,
+                "products": [
+                    {
+                        "name": "Nike Shoes 0",
+                        "description": "Nike Air Force 1",
+                        "sku": 24,
+                        "id": 23,
+                    },
+                    {
+                        "name": "Nike Shoes 1",
+                        "description": "Nike Air Force 1",
+                        "sku": 2434,
+                        "id": 23245,
+                    },
+                ],
+            }
+        )
+    else:
+        return jsonify({"message": "Company not found"}), 404
 
 
 if __name__ == "__main__":
