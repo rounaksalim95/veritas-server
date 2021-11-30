@@ -49,7 +49,7 @@ def sign_up_company():
     username = request_data["username"]
     password = request_data["password"]
     companies[username] = password
-    company_name_map[username] = request_data["company_name"]
+    company_name_map[username] = request_data["name"]
     return jsonify({"message": "Company created successfully"})
 
 
