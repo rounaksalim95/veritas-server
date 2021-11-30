@@ -2,3 +2,4 @@ web3
 flask
 py-solc
 gunicorn
+flask-cors
