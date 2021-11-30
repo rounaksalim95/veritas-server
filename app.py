@@ -94,7 +94,7 @@ def get_company_information(username):
             }
         )
     else:
-        return jsonify({"message": "Company not found"}), 404
+        return jsonify({"message": "Company not found for " + username}), 404
 
 
 if __name__ == "__main__":
