@@ -99,6 +99,36 @@ def get_company_information(username):
         return jsonify({"message": "Company not found for " + username}), 404
 
 
+@app.route("/customer/<username>", methods=["GET"])
+def get_customer_information(username):
+    if username == "" or username is None:
+        return jsonify({"message": "Invalid username"}), 400
+
+    if username in users:
+        # return hardcoded products for now
+        return jsonify(
+            {
+                "message": "Customer found",
+                "products": [
+                    {
+                        "name": "Nike Shoes 0",
+                        "description": "Nike Air Force 1",
+                        "sku": 24,
+                        "id": 23,
+                    },
+                    {
+                        "name": "Nike Shoes 1",
+                        "description": "Nike Air Force 1",
+                        "sku": 2434,
+                        "id": 23245,
+                    },
+                ],
+            }
+        )
+    else:
+        return jsonify({"message": "Company not found for " + username}), 404
+
+
 @app.route("/company/add/product", methods=["POST"])
 def add_product():
     requset_data = request.json
