@@ -99,8 +99,8 @@ def get_company_information(username):
         return jsonify({"message": "Company not found for " + username}), 404
 
 
-@app.route("/company/list/products", methods=["POST"])
-def list_product():
+@app.route("/company/add/product", methods=["POST"])
+def add_product():
     requset_data = request.json
     username = requset_data["username"]
     product_name = requset_data["product_name"]
