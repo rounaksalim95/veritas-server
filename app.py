@@ -288,7 +288,7 @@ def get_company_keys(username):
 
 
 @app.route("/customer/<username>/keys", methods=["GET"])
-def get_company_keys(username):
+def get_customer_keys(username):
     if username == "" or username is None:
         return jsonify({"message": "Invalid username for customer"}), 400
 
