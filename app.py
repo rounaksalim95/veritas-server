@@ -99,5 +99,25 @@ def get_company_information(username):
         return jsonify({"message": "Company not found for " + username}), 404
 
 
+@app.route("/sell/product", methods=["POST"])
+def sell_product():
+    request_data = request.json
+    username = request_data["username"]
+    new_owner = request_data["new_owner"]  # New owner's email address
+    product_id = request_data["product_id"]
+
+    return jsonify({"message": "Product sold successfully to " + new_owner})
+
+
+@app.route("/transfer/product", methods=["POST"])
+def transfer_product():
+    request_data = request.json
+    username = request_data["username"]
+    new_owner = request_data["new_owner"]  # New owner's email address
+    product_id = request_data["product_id"]
+
+    return jsonify({"message": "Product transferred successfully to " + new_owner})
+
+
 if __name__ == "__main__":
     app.run(debug=True)
