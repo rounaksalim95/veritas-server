@@ -322,5 +322,15 @@ def get_customer_keys(username):
         return jsonify({"message": "Customer not found for " + username}), 404
 
 
+@app.route("/test", methods=["GET"])
+def test():
+    return jsonify({
+        "users": users,
+        "companies": companies,
+        "users_name_map": users_name_map,
+        "company_name_map": company_name_map,
+    })
+
+
 if __name__ == "__main__":
     app.run(debug=True)
