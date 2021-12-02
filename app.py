@@ -324,6 +324,7 @@ def get_customer_keys(username):
 
 @app.route("/test", methods=["GET"])
 def test():
+    print("\nTesting the app")
     return jsonify({
         "users": users,
         "companies": companies,
