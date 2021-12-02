@@ -1,7 +1,7 @@
 import json
 
 from flask import Flask, jsonify, request
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin
 from web3 import Web3
 
 import blockchain_utils
@@ -70,6 +70,7 @@ contract = w3.eth.contract(address=contract_address, abi=abi)
 
 
 # Flask routes
+# @cross_origin(supports_credentials=True)
 @app.route("/signup/customer", methods=["POST"])
 def sign_up_customer():
     request_data = request.json
@@ -103,6 +104,7 @@ def sign_in_customer():
 
 
 @app.route("/signup/company", methods=["POST"])
+# @cross_origin(supports_credentials=True)
 def sign_up_company():
     request_data = request.json
     username = request_data["username"]
@@ -290,6 +292,7 @@ def get_company_keys(username):
         return jsonify({"message": "Invalid username for company"}), 400
 
     print("\nGetting keys for company:", username)
+    print("companies", companies)
 
     if username in companies:
         return jsonify(
@@ -309,6 +312,8 @@ def get_customer_keys(username):
         return jsonify({"message": "Invalid username for customer"}), 400
 
     print("\nGetting keys for customer:", username)
+    print("users are ", users)
+    print("users_name_map", users_name_map)
 
     if username in users:
         return jsonify(
