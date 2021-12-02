@@ -69,6 +69,15 @@ print(w3.isConnected())
 contract = w3.eth.contract(address=contract_address, abi=abi)
 
 
+def log_request():
+    print("==============================")
+    print("\n Users:", users)
+    print("\n Users name map:", users_name_map)
+    print("\n Companies:", companies)
+    print("\n Company name map:", company_name_map)
+    print("==============================")
+
+
 # Flask routes
 # @cross_origin(supports_credentials=True)
 @app.route("/signup/customer", methods=["POST"])
@@ -79,6 +88,7 @@ def sign_up_customer():
     users[username] = password
 
     print("\n Signing up customer with request data:", request_data)
+    log_request()
 
     if len(accounts) <= 0:
         return jsonify({"message": "Error creating account - out of resources"}), 400
@@ -94,6 +104,7 @@ def sign_up_customer():
 @app.route("/signin/customer", methods=["POST"])
 def sign_in_customer():
     request_data = request.json
+    log_request()
     if (
         request_data["username"] in users
         and users[request_data["username"]] == request_data["password"]
@@ -112,6 +123,7 @@ def sign_up_company():
     companies[username] = password
 
     print("\n Signing up company with request data:", request_data)
+    log_request()
 
     if len(accounts) <= 0:
         return jsonify({"message": "Error signing up company - out of resources"}), 400
@@ -126,6 +138,7 @@ def sign_up_company():
 @app.route("/signin/company", methods=["POST"])
 def sign_in_company():
     request_data = request.json
+    log_request()
     if (
         request_data["username"] in companies
         and companies[request_data["username"]] == request_data["password"]
@@ -141,6 +154,7 @@ def get_company_information(username):
         return jsonify({"message": "Invalid username for company"}), 400
 
     print("\nProviding company information for " + username)
+    log_request()
 
     if username in companies:
         company_name = company_name_map[username][0]
@@ -169,6 +183,7 @@ def get_customer_information(username):
         return jsonify({"message": "Invalid username for customer"}), 400
 
     print("\nProviding customer information for " + username)
+    log_request()
 
     if username in users:
         user_address = users_name_map[username][0]
@@ -198,6 +213,7 @@ def add_product():
     product_sku = request_data["product_sku"]
 
     print("\nAdding product with request data:", request_data)
+    log_request()
 
     try:
         blockchain_utils.add_product(
@@ -225,6 +241,7 @@ def sell_product():
     product_id = request_data["product_id"]
 
     print("\nSelling product with request data:", request_data)
+    log_request()
 
     if not new_owner in users:
         return (
@@ -262,6 +279,7 @@ def transfer_product():
     product_id = request_data["product_id"]
 
     print("\nTransferring product with request data:", request_data)
+    log_request()
 
     if not new_owner in users:
         return (
@@ -292,7 +310,7 @@ def get_company_keys(username):
         return jsonify({"message": "Invalid username for company"}), 400
 
     print("\nGetting keys for company:", username)
-    print("companies", companies)
+    log_request()
 
     if username in companies:
         return jsonify(
@@ -312,8 +330,7 @@ def get_customer_keys(username):
         return jsonify({"message": "Invalid username for customer"}), 400
 
     print("\nGetting keys for customer:", username)
-    print("users are ", users)
-    print("users_name_map", users_name_map)
+    log_request()
 
     if username in users:
         return jsonify(
@@ -330,12 +347,15 @@ def get_customer_keys(username):
 @app.route("/test", methods=["GET"])
 def test():
     print("\nTesting the app")
-    return jsonify({
-        "users": users,
-        "companies": companies,
-        "users_name_map": users_name_map,
-        "company_name_map": company_name_map,
-    })
+    log_request()
+    return jsonify(
+        {
+            "users": users,
+            "companies": companies,
+            "users_name_map": users_name_map,
+            "company_name_map": company_name_map,
+        }
+    )
 
 
 if __name__ == "__main__":
