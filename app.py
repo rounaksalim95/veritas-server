@@ -77,6 +77,8 @@ def sign_up_customer():
     password = request_data["password"]
     users[username] = password
 
+    print("\n Signing up customer with request data:", request_data)
+
     if len(accounts) <= 0:
         return jsonify({"message": "Error creating account - out of resources"}), 400
 
@@ -107,6 +109,8 @@ def sign_up_company():
     password = request_data["password"]
     companies[username] = password
 
+    print("\n Signing up company with request data:", request_data)
+
     if len(accounts) <= 0:
         return jsonify({"message": "Error signing up company - out of resources"}), 400
 
@@ -134,6 +138,8 @@ def get_company_information(username):
     if username == "" or username is None:
         return jsonify({"message": "Invalid username for company"}), 400
 
+    print("\nProviding company information for " + username)
+
     if username in companies:
         company_name = company_name_map[username][0]
         company_address = company_name_map[username][1]
@@ -159,6 +165,8 @@ def get_company_information(username):
 def get_customer_information(username):
     if username == "" or username is None:
         return jsonify({"message": "Invalid username for customer"}), 400
+
+    print("\nProviding customer information for " + username)
 
     if username in users:
         user_address = users_name_map[username][0]
@@ -187,6 +195,8 @@ def add_product():
     product_description = request_data["product_description"]
     product_sku = request_data["product_sku"]
 
+    print("\nAdding product with request data:", request_data)
+
     try:
         blockchain_utils.add_product(
             w3,
@@ -211,6 +221,8 @@ def sell_product():
     username = request_data["username"]
     new_owner = request_data["new_owner"]  # New owner's email address
     product_id = request_data["product_id"]
+
+    print("\nSelling product with request data:", request_data)
 
     if not new_owner in users:
         return (
@@ -247,6 +259,8 @@ def transfer_product():
     new_owner = request_data["new_owner"]  # New owner's email address
     product_id = request_data["product_id"]
 
+    print("\nTransferring product with request data:", request_data)
+
     if not new_owner in users:
         return (
             jsonify({"message": "Account you're sending the token to doesn't exist"}),
@@ -275,6 +289,8 @@ def get_company_keys(username):
     if username == "" or username is None:
         return jsonify({"message": "Invalid username for company"}), 400
 
+    print("\nGetting keys for company:", username)
+
     if username in companies:
         return jsonify(
             {
@@ -292,6 +308,8 @@ def get_customer_keys(username):
     if username == "" or username is None:
         return jsonify({"message": "Invalid username for customer"}), 400
 
+    print("\nGetting keys for customer:", username)
+
     if username in users:
         return jsonify(
             {
@@ -301,7 +319,7 @@ def get_customer_keys(username):
             }
         )
     else:
-        return jsonify({"message": "Company not found for " + username}), 404
+        return jsonify({"message": "Customer not found for " + username}), 404
 
 
 if __name__ == "__main__":
